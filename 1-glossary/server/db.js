@@ -22,34 +22,17 @@ const entrySchema = new mongoose.Schema({
 const Term = mongoose.model('Term', entrySchema);
 
 exports.save = (word, definition) => {
-  console.log('in db save');
-
   return Term.create({ word, definition});
-
 }
 
 exports.retrieve = () => {
-  // retrieve all documents in terms collection
-  console.log('in db retrieve');
-
-  return Term.find({}).exec();
+  return Term.find({}).sort('word').exec();
 }
 
 exports.modify = (existingWord, newDef) => {
-  console.log('in db modify');
-  // find by existingword
-  let updatedEntry = {
-    word: existingWord,
-    definition: newDef
-  }
-
   return Term.updateOne({ word: existingWord }, { definition: newDef }).exec();
-
 }
 
-exports.remove = (wordToRemove) => {
-  console.log('in db remove');
-
-  return Term.deleteOne({ word: wordToRemove }).exec();
-
+exports.remove = (id) => {
+  return Term.deleteOne({ _id: id }).exec();
 }
