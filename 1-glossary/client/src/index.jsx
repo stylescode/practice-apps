@@ -6,25 +6,56 @@ import WordList from './components/wordList.jsx';
 import Search from './components/search.jsx';
 import Add from './components/add.jsx';
 
+const Server = 'http://localhost:3005/glossary';
+
 const App = () => {
 
   const [words, setWords] = React.useState([]);
 
+  const [displayedWords, setDisplayedWords] = React.useState(words);
+
+  const retrieveWords = () => {
+    axios.get(Server)
+      .then((response) => {
+        setWords(response.data);
+        setDisplayedWords(response.data);
+      })
+  }
+
+  React.useEffect(() => {
+    retrieveWords();
+  }, []);
+
   const handleSearch = (input) => {
-    console.log('you searched for ' + input);
+    const filteredWords = [];
+
+    words.forEach((word) => {
+      if (word.word.includes(input)) {
+        filteredWords.push(word);
+      }
+    })
+    setDisplayedWords(filteredWords);
   }
 
   const handleAdd = (wordToAdd, defToAdd) => {
-    console.log('adding word: ', wordToAdd);
-    console.log('adding def: ', defToAdd);
+    axios.post(Server, { wordToAdd, defToAdd })
+      .then(() => {
+        retrieveWords();
+      })
   }
 
-  const handleEdit = () => {
-    console.log('editing word');
+  const handleEdit = (existingWord, newDefinition) => {
+    axios.put(Server, { existingWord, newDefinition })
+      .then(() => {
+        retrieveWords();
+      })
   }
 
-  const handleDelete = () => {
-    console.log('deleting word');
+  const handleDelete = (wordId) => {
+    axios.delete(`${Server}/${wordId}`)
+      .then(() => {
+        retrieveWords();
+      })
   }
 
 
@@ -34,7 +65,7 @@ const App = () => {
       <Search handleSearch={handleSearch}/>
       <Add handleAdd={handleAdd}/>
       <div>Current Dictionary:</div>
-      <WordList words={words}/>
+      <WordList words={displayedWords} handleEdit={handleEdit} handleDelete={handleDelete}/>
     </div>
   )
 }

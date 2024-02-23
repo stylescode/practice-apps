@@ -15,7 +15,6 @@ const Search = ({ handleSearch }) => {
     searchBar.value = '';
   }
 
-
   return(
     <div>
       <input type='text' id='searchBar' placeholder='search for a word...' onChange={(e) => handleChange(e)}/>

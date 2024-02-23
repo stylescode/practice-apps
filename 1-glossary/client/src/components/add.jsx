@@ -6,17 +6,15 @@ const Add = ({ handleAdd }) => {
   const [defToAdd, setDefToAdd] = React.useState('');
 
   const handleWordInput = (event) => {
-    console.log(event.target.value);
     setWordToAdd(event.target.value);
   }
 
   const handleDefInput = (event) => {
-    console.log(event.target.value);
     setDefToAdd(event.target.value);
   }
 
   const addInputs = () => {
-    handleAdd(wordToAdd, defToAdd);
+    handleAdd(wordToAdd.toLowerCase(), defToAdd.toLowerCase());
     setWordToAdd('');
     setDefToAdd('');
     document.getElementById('wordBar').value = '';
@@ -24,7 +22,7 @@ const Add = ({ handleAdd }) => {
   }
 
   return(
-    <div>
+    <div id='addWord'>
       <div>
         Word: <input type='text' id='wordBar' onChange={(e) => handleWordInput(e)}/>
       </div>
@@ -34,7 +32,6 @@ const Add = ({ handleAdd }) => {
       <button onClick={addInputs}>ADD WORD</button>
     </div>
   )
-
 }
 
 export default Add;
